@@ -1,0 +1,108 @@
+import type { TerminalCommand } from "../types";
+
+export const terminalCommands: readonly TerminalCommand[] = [
+  {
+    command: "help",
+    output: [
+      "Available commands:",
+      "",
+      "  whoami      — Identity report",
+      "  about       — Who is Jhonan Factor",
+      "  skills      — Technical skill matrix",
+      "  projects    — Selected systems overview",
+      "  stack       — Core technology stack",
+      "  contact     — Reach out",
+      "  clear       — Clear terminal output",
+      "",
+      "Type any command to execute.",
+    ],
+  },
+  {
+    command: "whoami",
+    output: [
+      "╔══════════════════════════════════════╗",
+      "║  JHONAN FACTOR                       ║",
+      "║  Software, Systems, Security & ML Eng ║",
+      "║  NODE: JF-01 │ LOCATION: LIMA, PE     ║",
+      "║  STATUS: RUNTIME ACTIVE               ║",
+      "╚═══════════════════════════════════════╝",
+    ],
+  },
+  {
+    command: "about",
+    output: [
+      "I build systems across multiple layers of the stack —",
+      "from memory-aware backend processing and runtime",
+      "analysis to applied machine learning and interactive",
+      "WebGL experiences.",
+      "",
+      "My workflow combines software architecture,",
+      "AI-assisted development and low-level technical",
+      "experimentation to move rapidly from concept to",
+      "working systems.",
+    ],
+  },
+  {
+    command: "skills",
+    output: [
+      "[JHONAN FACTOR]",
+      "",
+      "├── SYSTEMS & PERFORMANCE",
+      "│   └── Rust, Python, SQLite, IPC, MMAP, WAL",
+      "├── SECURITY & REVERSE ENGINEERING",
+      "│   └── Luau, Runtime Instrumentation, Memory Analysis",
+      "├── APPLIED AI & MACHINE LEARNING",
+      "│   └── CatBoost, Pandas, NumPy, Pydantic, Instructor",
+      "├── CYBER THREAT INTELLIGENCE",
+      "│   └── OSINT, MTProto, Async Networking",
+      "├── FULL-STACK ENGINEERING",
+      "│   └── TypeScript, React, Node.js, REST",
+      "└── CREATIVE DEVELOPMENT",
+      "    └── Three.js, WebGL, GSAP, Canvas 2D",
+    ],
+  },
+  {
+    command: "projects",
+    output: [
+      "SYSTEM_01  ALDLAS SEARCHER v2        [ACTIVE]",
+      "SYSTEM_02  EXTRACTOR SUITE v2        [RESEARCH]",
+      "SYSTEM_03  CENTRO DE COMANDO FIJAS   [ACTIVE]",
+      "SYSTEM_04  SANTUARIO DEL HOMBRE      [ACTIVE]",
+      "SYSTEM_05  TELEGRAM AUTOMATION ENG   [ACTIVE]",
+      "SYSTEM_06  CLIENT MANAGEMENT SYSTEM  [ARCHIVED]",
+    ],
+  },
+  {
+    command: "stack",
+    output: [
+      "CORE LANGUAGES",
+      "  Rust  │  Python  │  TypeScript  │  Luau",
+      "",
+      "DATA LAYER",
+      "  SQLite FTS5  │  WAL  │  MMAP",
+      "",
+      "MACHINE LEARNING",
+      "  CatBoost  │  Scikit-Learn  │  Pandas  │  NumPy",
+      "",
+      "CREATIVE / FRONTEND",
+      "  Three.js  │  WebGL  │  GSAP  │  React",
+      "",
+      "INFRASTRUCTURE",
+      "  Node.js  │  Docker  │  Firebase  │  REST",
+    ],
+  },
+  {
+    command: "contact",
+    output: [
+      "GitHub    → github.com/jhonanfactor",
+      "LinkedIn  → linkedin.com/in/jhonanfactor",
+      "Telegram  → t.me/jhonanfactor",
+      "Email     → contact@jhonanfactor.dev",
+      "",
+      "Open to: Systems engineering, Security research,",
+      "Applied ML, and creative development collaborations.",
+    ],
+  },
+] as const;
+
+export const TERMINAL_PROMPT = "jhonan@system:~$";

@@ -1,0 +1,734 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* Backgrounds */
+  --bg-base: #030303;
+  --bg-surface: #0a0a0f;
+  --bg-elevated: #12101a;
+  --bg-glass: rgba(255, 255, 255, 0.03);
+  --bg-glass-hover: rgba(255, 255, 255, 0.06);
+
+  /* Text */
+  --text-primary: #e8e8f0;
+  --text-secondary: #9a8a8e;
+  --text-muted: #504048;
+  --text-accent: #ff8a95;
+
+  /* Accents — crimson blood-red palette */
+  --accent-violet: #b00018;
+  --accent-violet-light: #ff3c55;
+  --accent-violet-glow: rgba(176, 0, 24, 0.2);
+  --accent-blue: #ff003c;
+  --accent-blue-light: #ff4765;
+  --accent-blue-glow: rgba(255, 0, 60, 0.15);
+  --accent-red: #ff003c;
+  --accent-red-light: #ff6b7f;
+  --accent-red-glow: rgba(255, 0, 60, 0.15);
+  --accent-cyan: #ff4765;
+  --accent-cyan-glow: rgba(255, 71, 101, 0.15);
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(176, 0, 24, 0.5);
+  --border-blue: rgba(255, 0, 60, 0.3);
+
+  /* Glows */
+  --glow-violet: 0 0 30px rgba(176, 0, 24, 0.4), 0 0 60px rgba(176, 0, 24, 0.12);
+  --glow-blue: 0 0 20px rgba(255, 0, 60, 0.3);
+  --glow-red: 0 0 20px rgba(255, 0, 60, 0.3);
+  --glow-ambient: 0 0 80px rgba(176, 0, 24, 0.1);
+
+  /* Typography */
+  --font-display: "Outfit", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Spacing scale */
+  --space-section: clamp(5rem, 10vw, 10rem);
+}
+
+/* ============================================================
+   BASE RESET & GLOBAL STYLES
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-violet);
+  color: #fff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-violet);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-violet-light);
+}
+
+/* Focus */
+:focus-visible {
+  outline: 2px solid var(--accent-violet);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* ============================================================
+   TYPOGRAPHY UTILITIES
+   ============================================================ */
+.font-display { font-family: var(--font-display); }
+.font-body { font-family: var(--font-body); }
+.font-mono { font-family: var(--font-mono); }
+
+.text-gradient-violet {
+  background: linear-gradient(135deg, var(--accent-violet-light), var(--accent-blue-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-red {
+  background: linear-gradient(135deg, var(--accent-red-light), var(--accent-violet-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   GLASS COMPONENTS
+   ============================================================ */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+}
+
+.glass-elevated {
+  background: var(--bg-glass-hover);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-default);
+}
+
+/* ============================================================
+   ANIMATED BORDER
+   ============================================================ */
+.border-animated {
+  position: relative;
+  overflow: hidden;
+}
+
+.border-animated::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    var(--accent-violet) 50%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.border-animated:hover::after {
+  opacity: 1;
+}
+
+/* ============================================================
+   SCAN LINE EFFECT
+   ============================================================ */
+.scanlines {
+  position: relative;
+}
+
+.scanlines::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.05) 2px,
+    rgba(0, 0, 0, 0.05) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================================
+   GLITCH TEXT
+   ============================================================ */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.glitch.active::before {
+  color: var(--accent-red);
+  animation: glitch-1 0.2s steps(1) forwards;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  opacity: 0.8;
+}
+
+.glitch.active::after {
+  color: var(--accent-cyan);
+  animation: glitch-2 0.2s steps(1) 0.05s forwards;
+  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  opacity: 0.8;
+}
+
+@keyframes glitch-1 {
+  0% { transform: translate(2px, 0); }
+  25% { transform: translate(-2px, 0); }
+  50% { transform: translate(1px, 0); }
+  75% { transform: translate(-1px, 0); }
+  100% { transform: translate(0, 0); opacity: 0; }
+}
+
+@keyframes glitch-2 {
+  0% { transform: translate(-2px, 0); }
+  25% { transform: translate(2px, 0); }
+  50% { transform: translate(-1px, 0); }
+  75% { transform: translate(1px, 0); }
+  100% { transform: translate(0, 0); opacity: 0; }
+}
+
+/* ============================================================
+   STATUS INDICATOR BLINK
+   ============================================================ */
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ============================================================
+   SHIMMER EFFECT
+   ============================================================ */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.04) 50%,
+    transparent 60%
+  );
+  transform: translateX(-100%);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ============================================================
+   FLOATING ANIMATION
+   ============================================================ */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ============================================================
+   SECTION SPACING
+   ============================================================ */
+.section {
+  padding-top: var(--space-section);
+  padding-bottom: var(--space-section);
+}
+
+/* ============================================================
+   TERMINAL STYLES
+   ============================================================ */
+.terminal-window {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.terminal-body {
+  padding: 16px;
+  min-height: 300px;
+  max-height: 450px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-violet) transparent;
+}
+
+.terminal-line {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.terminal-prompt-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-violet-light);
+}
+
+.terminal-output {
+  color: var(--text-secondary);
+  margin: 4px 0 12px;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.1em;
+  background: var(--accent-violet-light);
+  vertical-align: text-bottom;
+  animation: cursor-blink 1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ============================================================
+   NOISE OVERLAY
+   ============================================================ */
+.noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+/* ============================================================
+   RESPONSIVE HELPERS
+   ============================================================ */
+@media (pointer: coarse) {
+  .cursor-effects { display: none; }
+  .hover-only { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .float { animation: none; }
+  .shimmer::after { animation: none; }
+  .status-dot { animation: none; }
+}
+
+/* ============================================================
+   CUSTOM CURSOR LAYER
+   ============================================================ */
+.cursor-dot {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: transform 0.1s ease;
+}
+
+/* ============================================================
+   PROJECT CARD 3D TILT
+   ============================================================ */
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+  will-change: transform;
+}
+
+.card-3d:hover {
+  box-shadow: var(--glow-violet);
+}
+
+/* ============================================================
+   MOBILE TECHNICAL IDENTITY
+   ============================================================ */
+.skills-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .technical-identity {
+    padding-inline: 0;
+  }
+
+  .technical-identity > div:first-child {
+    padding-inline: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .technical-identity #dna-heading {
+    max-width: 11ch;
+    line-height: 0.95;
+  }
+
+  .technical-identity #dna-heading span {
+    display: block;
+    margin-left: 0 !important;
+    margin-top: 0.18em;
+  }
+
+  .technical-identity #dna-heading + p {
+    max-width: 34ch;
+    line-height: 1.65;
+  }
+
+  .skills-desktop {
+    display: none;
+  }
+
+  .skills-mobile {
+    display: block;
+  }
+
+  .skills-mobile__eyebrow,
+  .skills-mobile__stack-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 1.25rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+  }
+
+  .skills-domain-track {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding: 0.75rem 1.25rem 1.15rem;
+    scroll-padding-inline: 1.25rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .skills-domain-track::-webkit-scrollbar,
+  .skills-chip-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .skills-domain-tab {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    flex: 0 0 min(76vw, 17rem);
+    min-height: 5.5rem;
+    padding: 0.9rem 1rem;
+    overflow: hidden;
+    color: var(--text-secondary);
+    text-align: left;
+    background: rgba(10, 10, 15, 0.82);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0.9rem;
+    scroll-snap-align: start;
+    transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    touch-action: manipulation;
+  }
+
+  .skills-domain-tab[aria-selected="true"] {
+    color: var(--text-primary);
+    background: linear-gradient(135deg, rgba(176, 0, 24, 0.2), rgba(10, 10, 15, 0.96) 72%);
+    border-color: rgba(255, 60, 85, 0.55);
+    box-shadow: inset 3px 0 0 var(--accent-violet-light), 0 12px 35px rgba(0, 0, 0, 0.24);
+  }
+
+  .skills-domain-tab:active {
+    transform: scale(0.985);
+  }
+
+  .skills-domain-tab__index {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+  }
+
+  .skills-domain-tab__icon {
+    grid-column: 3;
+    color: var(--accent-violet-light);
+    font-size: 0.9rem;
+  }
+
+  .skills-domain-tab__label {
+    align-self: end;
+    max-width: 19ch;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.07em;
+  }
+
+  .skills-domain-tab__count {
+    align-self: end;
+    justify-self: end;
+    color: var(--accent-violet-light);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .skills-mobile__panel {
+    margin: 0.35rem 1rem 0;
+    padding: 1.25rem 0 1.1rem;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(18, 16, 26, 0.94), rgba(5, 5, 8, 0.9));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.1rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .skills-mobile__panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-inline: 1.15rem;
+  }
+
+  .skills-mobile__status {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: var(--accent-violet-light);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+  }
+
+  .skills-mobile__panel h3 {
+    max-width: 21ch;
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 5vw, 1.35rem);
+    font-weight: 750;
+    line-height: 1.15;
+    letter-spacing: 0.025em;
+  }
+
+  .skills-mobile__total {
+    display: grid;
+    place-items: center;
+    flex: 0 0 2.75rem;
+    min-height: 2.75rem;
+    color: var(--accent-violet-light);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    border: 1px solid rgba(255, 60, 85, 0.35);
+    border-radius: 50%;
+    background: rgba(176, 0, 24, 0.1);
+  }
+
+  .skills-mobile__summary {
+    max-width: 36ch;
+    margin: 0.85rem 1.15rem 1.35rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .skills-mobile__stack-label {
+    padding-inline: 1.15rem;
+  }
+
+  .skills-mobile__swipe-hint {
+    color: var(--accent-violet-light);
+  }
+
+  .skills-chip-viewport {
+    position: relative;
+  }
+
+  .skills-chip-viewport::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0.55rem;
+    width: 2.5rem;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(5, 5, 8, 0.94));
+  }
+
+  .skills-chip-track {
+    display: flex;
+    gap: 0.65rem;
+    overflow-x: auto;
+    padding: 0.75rem 1.15rem 0.65rem;
+    scroll-padding-inline: 1.15rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .skill-chip {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    flex: 0 0 min(68vw, 14.5rem);
+    min-height: 7.3rem;
+    padding: 0.85rem;
+    scroll-snap-align: start;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0.8rem;
+  }
+
+  .skill-chip__number {
+    margin-bottom: 0.75rem;
+    color: rgba(255, 60, 85, 0.7);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+  }
+
+  .skill-chip strong {
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    line-height: 1.3;
+  }
+
+  .skill-chip strong + span {
+    align-self: end;
+    margin-top: 0.55rem;
+    color: var(--text-muted);
+    font-size: 0.73rem;
+    line-height: 1.45;
+  }
+}
+
+@media (max-width: 359px) {
+  .technical-identity > div:first-child,
+  .skills-mobile__eyebrow {
+    padding-inline: 1rem;
+  }
+
+  .skills-domain-track {
+    padding-inline: 1rem;
+    scroll-padding-inline: 1rem;
+  }
+
+  .skills-domain-tab {
+    flex-basis: 82vw;
+  }
+
+  .skills-mobile__panel {
+    margin-inline: 0.75rem;
+  }
+}
+
+/* ============================================================
+   GLOW TRAIL (cursor ambient)
+   ============================================================ */
+.cursor-glow {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgba(124, 58, 237, 0.06) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  transition: left 0.3s ease, top 0.3s ease;
+}
