@@ -122,6 +122,7 @@ export function Terminal() {
                 <div
                   key={line.id}
                   className="terminal-line"
+                  translate="no"
                 >
                   {line.content || "\u00A0"}
                 </div>
@@ -170,7 +171,7 @@ export function Terminal() {
                 setInput(cmd);
                 inputRef.current?.focus();
               }}
-              className="font-mono text-xs px-3 py-1.5 rounded"
+              className="terminal-quick-command font-mono text-xs px-3 py-1.5 rounded"
               style={{
                 background: "rgba(124,58,237,0.06)",
                 border: "1px solid rgba(124,58,237,0.15)",

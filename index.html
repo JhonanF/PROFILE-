@@ -13,6 +13,12 @@
     <meta name="author" content="Jhonan Factor" />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#030303" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Critical hero artwork: responsive preload, never lazy-loaded -->
+    <link rel="preload" as="image" href="/hero-mobile.webp" type="image/webp" media="(max-width: 767px)" />
+    <link rel="preload" as="image" href="/hero-desktop.webp" type="image/webp" media="(min-width: 768px)" />
+    <link rel="preload" as="image" href="/blood-puddle-premium.png" type="image/png" />
 
     <!-- OpenGraph -->
     <meta property="og:type" content="website" />
@@ -22,7 +28,7 @@
       property="og:description"
       content="Software engineering, systems engineering, runtime reverse engineering, applied machine learning, cyber threat intelligence and creative full-stack development."
     />
-    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image" content="/hero-bg.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -31,7 +37,7 @@
       name="twitter:description"
       content="Systems engineering, runtime reverse engineering, applied machine learning, cyber threat intelligence and creative full-stack development."
     />
-    <meta name="twitter:image" content="/og-image.png" />
+    <meta name="twitter:image" content="/hero-bg.png" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -39,6 +45,10 @@
     <!-- Preconnect for fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=JetBrains+Mono:wght@400;700&amp;family=Outfit:wght@600;800;900&amp;display=swap"
+    />
 
     <!-- Cursor -->
     <style>

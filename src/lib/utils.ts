@@ -20,25 +20,6 @@ export function mapRange(
   return ((value - inMin) / (inMax - inMin)) * (outMax - outMin) + outMin;
 }
 
-export function isTouchDevice(): boolean {
-  return window.matchMedia("(pointer: coarse)").matches;
-}
-
-export function prefersReducedMotion(): boolean {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-export function hasWebGL(): boolean {
-  try {
-    const canvas = document.createElement("canvas");
-    return !!(
-      canvas.getContext("webgl") ?? canvas.getContext("experimental-webgl")
-    );
-  } catch {
-    return false;
-  }
-}
-
 export function generateId(): string {
   return Math.random().toString(36).slice(2, 9);
 }

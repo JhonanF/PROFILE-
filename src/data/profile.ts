@@ -18,13 +18,13 @@ export const profile: ProfileMeta = {
 } as const;
 
 export const workflowSteps: readonly WorkflowStep[] = [
-  { step: "IDEA", description: "Problem definition and scope" },
-  { step: "ARCHITECTURE", description: "System design and structure" },
-  { step: "AI ORCHESTRATION", description: "Accelerated implementation" },
-  { step: "IMPLEMENTATION", description: "Code generation and assembly" },
-  { step: "MANUAL REVIEW", description: "Critical evaluation and refinement" },
-  { step: "OPTIMIZATION", description: "Performance and quality tuning" },
-  { step: "DEPLOYMENT", description: "Production delivery" },
+  { step: "DISCOVERY", description: "Requirements, constraints, and success criteria" },
+  { step: "SYSTEM DESIGN", description: "Boundaries, contracts, data and control flow" },
+  { step: "RISK ANALYSIS", description: "Failure modes, attack surface, and trade-offs" },
+  { step: "IMPLEMENTATION", description: "Typed, testable, production-grade code" },
+  { step: "VERIFICATION", description: "Tests, review, static and dynamic analysis" },
+  { step: "PROFILING", description: "Latency, memory, throughput, and bottlenecks" },
+  { step: "OPERATIONS", description: "Observability, deployment, and feedback loops" },
 ] as const;
 
 export const navItems: readonly NavItem[] = [
@@ -32,7 +32,7 @@ export const navItems: readonly NavItem[] = [
   { label: "DNA", section: "dna", index: 2 },
   { label: "SYSTEMS", section: "constellation", index: 3 },
   { label: "PROJECTS", section: "projects", index: 4 },
-  { label: "VIBE", section: "vibe", index: 5 },
+  { label: "METHOD", section: "vibe", index: 5 },
   { label: "TERMINAL", section: "terminal", index: 6 },
   { label: "CONTACT", section: "contact", index: 7 },
 ] as const;

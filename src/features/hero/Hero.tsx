@@ -1,13 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { HolographicAvatar } from "./HolographicAvatar";
 import { profile } from "../../data/profile";
-import { useMousePosition } from "../../hooks/useMousePosition";
-import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { getProfileViews, formatViewCount } from "../../lib/analytics";
 
 export function Hero() {
-  const { normalizedX, normalizedY } = useMousePosition();
-  const reducedMotion = useReducedMotion();
   const contentRef = useRef<HTMLDivElement>(null);
   const [views, setViews] = useState<string>("000000");
   const [visible, setVisible] = useState(false);
@@ -21,25 +17,16 @@ export function Hero() {
     getProfileViews().then((count) => setViews(formatViewCount(count)));
   }, []);
 
-  // Subtle parallax
-  useEffect(() => {
-    if (reducedMotion || !contentRef.current) return;
-    const el = contentRef.current;
-    const tx = normalizedX * 8;
-    const ty = normalizedY * 5;
-    el.style.transform = `translate(${tx}px, ${ty}px)`;
-  }, [normalizedX, normalizedY, reducedMotion]);
-
   return (
     <section
       id="identity"
-      className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16"
+      className="hero-section relative min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16"
       style={{ zIndex: 10 }}
       aria-label="Identity section"
     >
       <div
         ref={contentRef}
-        className="flex flex-col items-center text-center gap-8 max-w-4xl"
+        className="hero-content flex flex-col items-center text-center gap-8 max-w-4xl"
         style={{
           transition: "transform 0.1s ease-out",
           opacity: visible ? 1 : 0,
@@ -48,7 +35,7 @@ export function Hero() {
       >
         {/* Top metadata */}
         <div
-          className="flex items-center gap-6 font-mono text-xs tracking-widest"
+          className="hero-metadata flex items-center gap-6 font-mono text-xs tracking-widest"
           style={{ color: "var(--text-muted)" }}
           aria-hidden="true"
         >
@@ -70,7 +57,8 @@ export function Hero() {
         {/* Name */}
         <div>
           <h1
-            className="font-display font-black tracking-tight leading-none"
+            className="hero-name font-display font-black tracking-tight leading-none"
+            translate="no"
             style={{
               fontSize: "clamp(3rem, 8vw, 7rem)",
               background:
@@ -80,11 +68,11 @@ export function Hero() {
               backgroundClip: "text",
             }}
           >
-            JHONAN FACTOR
+            <span>JHONAN</span> <span>FACTOR</span>
           </h1>
 
           <p
-            className="font-mono text-sm md:text-base mt-3 tracking-widest"
+            className="hero-title font-mono text-sm md:text-base mt-3 tracking-widest"
             style={{ color: "var(--text-secondary)" }}
           >
             {profile.title}
@@ -92,7 +80,7 @@ export function Hero() {
         </div>
 
         {/* Role pills */}
-        <div className="flex flex-wrap justify-center gap-2 md:gap-3 max-w-2xl">
+        <div className="hero-roles flex flex-wrap justify-center gap-2 md:gap-3 max-w-2xl">
           {profile.roles.map((role) => (
             <span
               key={role}
@@ -112,7 +100,7 @@ export function Hero() {
         {/* Tagline */}
         <div className="flex flex-col items-center gap-2">
           <blockquote
-            className="font-display font-semibold tracking-wide text-center"
+            className="hero-tagline font-display font-semibold tracking-wide text-center"
             style={{
               fontSize: "clamp(1rem, 2.5vw, 1.4rem)",
               color: "var(--text-primary)",
@@ -123,7 +111,7 @@ export function Hero() {
           </blockquote>
 
           <p
-            className="font-mono text-xs tracking-widest"
+            className="hero-specializations font-mono text-xs tracking-widest"
             style={{ color: "var(--text-muted)" }}
             aria-label="Specializations"
           >
@@ -133,7 +121,7 @@ export function Hero() {
 
         {/* Bottom stats */}
         <div
-          className="flex items-center gap-8 font-mono text-xs"
+          className="hero-stats flex items-center gap-8 font-mono text-xs"
           style={{ color: "var(--text-muted)", letterSpacing: "0.12em" }}
           aria-hidden="true"
         >

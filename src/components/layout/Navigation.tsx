@@ -8,14 +8,46 @@ interface NavigationProps {
 
 export function Navigation({ activeSection }: NavigationProps) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
+    let frame: number | null = null;
+    let previous = window.scrollY > 60;
+    const onScroll = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        const next = window.scrollY > 60;
+        if (next !== previous) {
+          previous = next;
+          setScrolled(next);
+        }
+      });
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [menuOpen]);
+
   const scrollTo = (section: SectionId) => {
+    setMenuOpen(false);
     const el = document.getElementById(section);
     el?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -24,7 +56,7 @@ export function Navigation({ activeSection }: NavigationProps) {
     <nav
       role="navigation"
       aria-label="Main navigation"
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
+      className="site-navigation fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
       style={{
         background: scrolled
           ? "rgba(9,9,15,0.9)"
@@ -37,7 +69,10 @@ export function Navigation({ activeSection }: NavigationProps) {
     >
       {/* Logo */}
       <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        onClick={() => {
+          setMenuOpen(false);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
         className="font-mono font-bold tracking-widest"
         style={{
           color: "var(--accent-violet-light)",
@@ -100,6 +135,17 @@ export function Navigation({ activeSection }: NavigationProps) {
         })}
       </ul>
 
+      <button
+        type="button"
+        className="mobile-menu-trigger md:hidden"
+        aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-expanded={menuOpen}
+        aria-controls="mobile-navigation-drawer"
+        onClick={() => setMenuOpen((open) => !open)}
+      >
+        <span aria-hidden="true">{menuOpen ? "×" : "☰"}</span>
+      </button>
+
       {/* System status badge */}
       <div
         className="hidden md:flex items-center gap-2 font-mono text-xs"
@@ -108,6 +154,42 @@ export function Navigation({ activeSection }: NavigationProps) {
       >
         <span className="status-dot" />
         <span>SYSTEM ONLINE</span>
+      </div>
+
+      <div
+        className={`mobile-drawer-backdrop md:hidden ${menuOpen ? "is-open" : ""}`}
+        onClick={() => setMenuOpen(false)}
+        aria-hidden="true"
+      />
+
+      <div
+        id="mobile-navigation-drawer"
+        className={`mobile-navigation-drawer md:hidden ${menuOpen ? "is-open" : ""}`}
+        aria-hidden={!menuOpen}
+      >
+        <div className="mobile-navigation-drawer__header">
+          <span>NAVIGATION</span>
+          <span>JF.OS / 01</span>
+        </div>
+        <ul role="list">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.section;
+            return (
+              <li key={item.section}>
+                <button
+                  type="button"
+                  onClick={() => scrollTo(item.section)}
+                  aria-current={isActive ? "page" : undefined}
+                  tabIndex={menuOpen ? 0 : -1}
+                >
+                  <span>{String(item.index).padStart(2, "0")}</span>
+                  <strong>{item.label}</strong>
+                  <span aria-hidden="true">→</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </nav>
   );

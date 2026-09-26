@@ -1,6 +1,5 @@
 import { useEffect, useRef, useCallback } from "react";
-import { useVisibilityChange } from "../../hooks/useVisibilityChange";
-import { useReducedMotion } from "../../hooks/useReducedMotion";
+import { usePerformanceProfile } from "../../performance/profile";
 import type { SceneConfig } from "../../types";
 
 interface Node3D {
@@ -11,23 +10,19 @@ interface Node3D {
   vy: number;
   vz: number;
   radius: number;
+  phase: number; // For organic drifting and pulsing
 }
 
 interface UseThreeSceneProps {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   config: SceneConfig;
-  mouseX: number;
-  mouseY: number;
 }
 
 export function useThreeScene({
   canvasRef,
   config,
-  mouseX,
-  mouseY,
 }: UseThreeSceneProps): void {
-  const isVisible = useVisibilityChange();
-  const reducedMotion = useReducedMotion();
+  const performance = usePerformanceProfile();
   const animFrameRef = useRef<number | null>(null);
   const sceneRef = useRef<{
     nodes: Node3D[];
@@ -41,13 +36,14 @@ export function useThreeScene({
 
   const initNodes = useCallback((count: number): Node3D[] => {
     return Array.from({ length: count }, () => ({
-      x: (Math.random() - 0.5) * 2,
-      y: (Math.random() - 0.5) * 2,
+      x: (Math.random() - 0.5) * 3, // Wider spread
+      y: (Math.random() - 0.5) * 3,
       z: Math.random() * 1.5 - 0.75,
-      vx: (Math.random() - 0.5) * 0.0004,
-      vy: (Math.random() - 0.5) * 0.0004,
-      vz: (Math.random() - 0.5) * 0.0002,
-      radius: Math.random() * 1.5 + 0.5,
+      vx: (Math.random() - 0.5) * 0.0003,
+      vy: (Math.random() * -0.001) - 0.0004, // Faster float upwards
+      vz: 0, // No Z-movement to prevent perspective illusion of falling
+      radius: Math.random() * 2.5 + 0.8, // Larger size variance
+      phase: Math.random() * Math.PI * 2, // Random starting phase
     }));
   }, []);
 
@@ -58,17 +54,13 @@ export function useThreeScene({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const isMobile = window.matchMedia("(pointer: coarse)").matches;
-    const nodeCount = isMobile
-      ? Math.floor(config.nodeCount * 0.4)
-      : config.nodeCount;
+    sceneRef.current.nodes = initNodes(config.nodeCount);
 
-    sceneRef.current.nodes = initNodes(nodeCount);
-
+    let currentDpr = config.maxDpr;
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio, config.maxDpr);
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
+      const dpr = currentDpr;
+      canvas.width = Math.round(window.innerWidth * dpr);
+      canvas.height = Math.round(window.innerHeight * dpr);
       canvas.style.width = window.innerWidth + "px";
       canvas.style.height = window.innerHeight + "px";
       ctx.scale(dpr, dpr);
@@ -97,7 +89,7 @@ export function useThreeScene({
     let targetCamX = 0;
     let targetCamY = 0;
 
-    const draw = () => {
+    const draw = (time: number) => {
       const w = W();
       const h = H();
       ctx.clearRect(0, 0, w, h);
@@ -113,15 +105,21 @@ export function useThreeScene({
 
       const nodes = sceneRef.current.nodes;
 
-      // Update positions
-      if (!reducedMotion) {
+      // Update positions with organic drift
+      if (!performance.reducedMotion) {
         for (const node of nodes) {
-          node.x += node.vx;
-          node.y += node.vy;
-          node.z += node.vz;
-          if (Math.abs(node.x) > 1.2) node.vx *= -1;
-          if (Math.abs(node.y) > 1.2) node.vy *= -1;
-          if (Math.abs(node.z) > 0.8) node.vz *= -1;
+          // Organic drift using sine waves for X only (Z is locked to prevent scaling anomalies)
+          const driftX = Math.sin(time * 0.001 + node.phase) * 0.0005;
+
+          node.x += node.vx + driftX;
+          node.y += node.vy; // Strictly moves up
+
+          if (Math.abs(node.x) > 2.0) node.vx *= -1;
+          if (node.y < -2.0) {
+            // Respawn completely off-screen at the bottom
+            node.y = 2.0;
+            node.x = (Math.random() - 0.5) * 3;
+          }
         }
       }
 
@@ -132,8 +130,8 @@ export function useThreeScene({
         z: n.z,
       }));
 
-      // Draw connections
-      const maxDist = config.connectionDistance;
+      // Draw organic connections (faint liquid-like webbing for close particles)
+      const maxDist = config.connectionDistance * 0.7; // Shorter distance for liquid effect
       for (let i = 0; i < nodes.length; i++) {
         const a = nodes[i];
         const pa = projected[i];
@@ -150,40 +148,74 @@ export function useThreeScene({
           const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
           if (dist < maxDist) {
-            const alpha = (1 - dist / maxDist) * 0.3;
+            const alpha = Math.pow((1 - dist / maxDist), 2) * 0.4;
             ctx.beginPath();
             ctx.moveTo(pa.px, pa.py);
-            ctx.lineTo(pb.px, pb.py);
+            
+            // Smooth, stable curved lines for liquid organic feel
+            // We use the nodes' phases and time to make the liquid thread wiggle organically
+            const wiggle = Math.sin(time * 0.002 + a.phase + b.phase) * 15;
+            const cx = (pa.px + pb.px) / 2 + wiggle;
+            const cy = (pa.py + pb.py) / 2 - wiggle;
+            
+            ctx.quadraticCurveTo(cx, cy, pb.px, pb.py);
             ctx.strokeStyle = `rgba(176, 0, 24, ${alpha})`;
-            ctx.lineWidth = 0.5;
+            ctx.lineWidth = Math.max(0.1, (1 - dist / maxDist) * 2.5); // Slightly thicker viscosity
             ctx.stroke();
           }
         }
       }
 
       // Draw nodes
-      for (const p of projected) {
+      for (let i = 0; i < projected.length; i++) {
+        const p = projected[i];
+        const n = nodes[i];
+        if (!n || !p) continue;
+
         const depth = (p.pz - 1) / 2;
         const alpha = Math.max(0.1, 0.7 - depth * 0.5);
-        const r = (p.radius / p.pz) * 40;
+        
+        // Breathing pulse effect based on time and individual phase
+        const pulse = 1 + 0.15 * Math.sin(time * 0.003 + n.phase);
+        const r = (p.radius / p.pz) * 40 * pulse;
 
         ctx.beginPath();
         ctx.arc(p.px, p.py, Math.max(0.5, r), 0, Math.PI * 2);
 
-        const grad = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, r * 2);
-        grad.addColorStop(0, `rgba(255, 0, 60, ${alpha})`);
-        grad.addColorStop(1, `rgba(176, 0, 24, 0)`);
+        const grad = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, r * 1.5);
+        // Blood cell / glowing ember style
+        grad.addColorStop(0, `rgba(255, 71, 101, ${alpha})`); // Hot core
+        grad.addColorStop(0.3, `rgba(176, 0, 24, ${alpha * 0.8})`); // Dark blood body
+        grad.addColorStop(1, `rgba(82, 0, 8, 0)`); // Fade to black/transparent
         ctx.fillStyle = grad;
         ctx.fill();
       }
     };
 
-    const loop = () => {
-      draw();
+    let sampleStartedAt = window.performance.now();
+    let sampledFrames = 0;
+    const loop = (time: number) => {
+      draw(time);
+      sampledFrames += 1;
+      const now = window.performance.now();
+      const sampleDuration = now - sampleStartedAt;
+      if (sampleDuration >= 3000) {
+        const averageFps = (sampledFrames * 1000) / sampleDuration;
+        if (averageFps < 45 && currentDpr > 1) {
+          currentDpr = Math.max(1, currentDpr - 0.25);
+          resize();
+        }
+        sampledFrames = 0;
+        sampleStartedAt = now;
+      }
       animFrameRef.current = requestAnimationFrame(loop);
     };
 
-    loop();
+    if (performance.documentVisible && !performance.reducedMotion) {
+      animFrameRef.current = requestAnimationFrame(loop);
+    } else {
+      draw(0);
+    }
 
     return () => {
       if (animFrameRef.current !== null) {
@@ -191,19 +223,7 @@ export function useThreeScene({
       }
       window.removeEventListener("resize", resize);
     };
-  }, [canvasRef, config, initNodes, reducedMotion]);
+  }, [canvasRef, config, initNodes, performance.documentVisible, performance.reducedMotion]);
 
   // Update target camera from mouse — no re-render needed
-  useEffect(() => {
-    sceneRef.current.cameraOffsetX = mouseX * 0.05;
-    sceneRef.current.cameraOffsetY = mouseY * 0.05;
-  }, [mouseX, mouseY]);
-
-  // Pause loop when tab hidden
-  useEffect(() => {
-    if (!isVisible && animFrameRef.current !== null) {
-      cancelAnimationFrame(animFrameRef.current);
-      animFrameRef.current = null;
-    }
-  }, [isVisible]);
 }

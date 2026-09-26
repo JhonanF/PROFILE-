@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { Project } from "../../types";
+import { usePerformanceProfile } from "../../performance/profile";
 
 interface ProjectCardProps {
   project: Project;
@@ -12,14 +13,24 @@ const STATUS_CONFIG = {
 };
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const performance = usePerformanceProfile();
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const tiltRef = useRef({ x: 0, y: 0 });
   const rafRef = useRef<number | null>(null);
 
   const status = STATUS_CONFIG[project.status];
+  const enableTilt = performance.tier === "high" && !performance.isTouch;
+  const showHighlights = isHovered || performance.isTouch;
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!enableTilt) return;
     const card = cardRef.current;
     if (!card) return;
 
@@ -41,6 +52,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
   const handleMouseLeave = () => {
     setIsHovered(false);
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
     if (cardRef.current) {
       cardRef.current.style.transform =
         "perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)";
@@ -50,18 +65,18 @@ export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <div
       ref={cardRef}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => enableTilt && setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
       className="card-3d rounded-xl overflow-hidden shimmer"
       style={{
         background: isHovered ? "var(--bg-glass-hover)" : "var(--bg-glass)",
         border: `1px solid ${isHovered ? "rgba(124,58,237,0.4)" : "var(--border-subtle)"}`,
-        backdropFilter: "blur(12px)",
+        backdropFilter: performance.enableBlur ? "blur(12px)" : "none",
         transition:
           "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
         boxShadow: isHovered ? "var(--glow-violet)" : "none",
-        willChange: "transform",
+        willChange: enableTilt ? "transform" : "auto",
       }}
       role="article"
       aria-label={`Project: ${project.name}`}
@@ -153,7 +168,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         {/* Highlights — shown on hover */}
         <div
           style={{
-            maxHeight: isHovered ? "200px" : "0",
+            maxHeight: showHighlights ? "240px" : "0",
             overflow: "hidden",
             transition: "max-height 0.4s cubic-bezier(0.23, 1, 0.32, 1)",
           }}
@@ -187,7 +202,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       </div>
 
       {/* Animated border on hover */}
-      {isHovered && (
+      {isHovered && enableTilt && (
         <div
           className="absolute inset-0 rounded-xl pointer-events-none"
           style={{

@@ -1,41 +1,18 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { useInViewport } from "../../hooks/useInViewport";
+import { usePerformanceProfile } from "../../performance/profile";
 
 export function HolographicAvatar() {
-  const ring1Ref = useRef<HTMLDivElement>(null);
-  const ring2Ref = useRef<HTMLDivElement>(null);
-  const orbitRef = useRef<HTMLDivElement>(null);
-  const frameRef = useRef<number | null>(null);
-  const angleRef = useRef(0);
-
-  useEffect(() => {
-    let t = 0;
-    const loop = () => {
-      t += 0.008;
-      angleRef.current = t;
-
-      if (ring1Ref.current) {
-        ring1Ref.current.style.transform = `rotate(${t * 30}deg) rotateX(60deg)`;
-      }
-      if (ring2Ref.current) {
-        ring2Ref.current.style.transform = `rotate(${-t * 20}deg) rotateY(70deg)`;
-      }
-      if (orbitRef.current) {
-        const x = Math.cos(t) * 85;
-        const y = Math.sin(t) * 30;
-        orbitRef.current.style.transform = `translate(${x}px, ${y}px)`;
-      }
-
-      frameRef.current = requestAnimationFrame(loop);
-    };
-    frameRef.current = requestAnimationFrame(loop);
-    return () => {
-      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
-    };
-  }, []);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const performance = usePerformanceProfile();
+  const isInViewport = useInViewport(containerRef, "80px", performance.tier === "high");
+  const shouldAnimate =
+    isInViewport && performance.documentVisible && performance.tier === "high";
 
   return (
     <div
-      className="relative flex items-center justify-center"
+      ref={containerRef}
+      className="holographic-avatar relative flex items-center justify-center"
       style={{ width: 220, height: 220 }}
       aria-label="Profile avatar"
     >
@@ -51,8 +28,7 @@ export function HolographicAvatar() {
 
       {/* Ring 1 */}
       <div
-        ref={ring1Ref}
-        className="absolute inset-0 rounded-full"
+        className={`avatar-ring avatar-ring--one absolute inset-0 rounded-full ${shouldAnimate ? "is-animating" : ""}`}
         style={{
           border: "1px solid rgba(124,58,237,0.4)",
           transform: "rotate(0deg) rotateX(60deg)",
@@ -63,8 +39,7 @@ export function HolographicAvatar() {
 
       {/* Ring 2 */}
       <div
-        ref={ring2Ref}
-        className="absolute rounded-full"
+        className={`avatar-ring avatar-ring--two absolute rounded-full ${shouldAnimate ? "is-animating" : ""}`}
         style={{
           width: "80%",
           height: "80%",
@@ -79,8 +54,7 @@ export function HolographicAvatar() {
 
       {/* Orbital node */}
       <div
-        ref={orbitRef}
-        className="absolute"
+        className={`avatar-orbit absolute ${shouldAnimate ? "is-animating" : ""}`}
         style={{
           width: 8,
           height: 8,
@@ -97,7 +71,7 @@ export function HolographicAvatar() {
 
       {/* Avatar container */}
       <div
-        className="relative z-10 rounded-full overflow-hidden flex items-center justify-center"
+        className="avatar-photo-frame relative z-10 rounded-full overflow-hidden flex items-center justify-center"
         style={{
           width: 160,
           height: 160,
@@ -106,16 +80,19 @@ export function HolographicAvatar() {
           boxShadow: "var(--glow-violet), inset 0 0 30px rgba(176,0,24,0.16)",
         }}
       >
-        <img
-          src="/jhonan-profile.png"
-          alt="Retrato de Jhonan Factor"
-          width={160}
-          height={160}
-          className="h-full w-full object-cover"
-          style={{ objectPosition: "50% 48%" }}
-          decoding="async"
-          fetchPriority="high"
-        />
+        <picture className="block h-full w-full">
+          <source srcSet="/jhonan-profile-320.webp" type="image/webp" />
+          <img
+            src="/jhonan-profile.png"
+            alt="Retrato de Jhonan Factor"
+            width={160}
+            height={160}
+            className="h-full w-full object-cover"
+            style={{ objectPosition: "50% 48%" }}
+            decoding="async"
+            fetchPriority="high"
+          />
+        </picture>
 
         {/* Scanline overlay on avatar */}
         <div

@@ -94,10 +94,10 @@ export const terminalCommands: readonly TerminalCommand[] = [
   {
     command: "contact",
     output: [
-      "GitHub    → github.com/jhonanfactor",
-      "LinkedIn  → linkedin.com/in/jhonanfactor",
-      "Telegram  → t.me/jhonanfactor",
-      "Email     → contact@jhonanfactor.dev",
+      "GitHub    → github.com/JhonanF",
+      "Instagram → instagram.com/jhonan_f",
+      "Telegram  → t.me/zaa_1k",
+      "Email     → jhonanfactor@gmail.com",
       "",
       "Open to: Systems engineering, Security research,",
       "Applied ML, and creative development collaborations.",

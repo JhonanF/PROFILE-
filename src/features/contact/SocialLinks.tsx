@@ -43,8 +43,8 @@ export function SocialLinks() {
             aria-label={social.ariaLabel}
             className="flex items-center justify-center rounded-lg"
             style={{
-              width: 44,
-              height: 44,
+              width: 48,
+              height: 48,
               background: "var(--bg-glass)",
               border: "1px solid var(--border-subtle)",
               color: "var(--text-muted)",

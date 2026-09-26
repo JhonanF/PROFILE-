@@ -8,26 +8,21 @@ export function useActiveSection(): SectionId {
   useEffect(() => {
     const sectionIds = navItems.map((n) => n.section);
 
-    const observers = sectionIds.map((id) => {
-      const el = document.getElementById(id);
-      if (!el) return null;
-
-      const obs = new IntersectionObserver(
-        (entries) => {
-          const entry = entries[0];
-          if (entry?.isIntersecting) {
-            setActiveSection(id);
-          }
-        },
-        { rootMargin: "-40% 0px -40% 0px", threshold: 0 }
-      );
-      obs.observe(el);
-      return obs;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries.find((entry) => entry.isIntersecting);
+        if (visibleEntry && sectionIds.includes(visibleEntry.target.id as SectionId)) {
+          setActiveSection(visibleEntry.target.id as SectionId);
+        }
+      },
+      { rootMargin: "-40% 0px -40% 0px", threshold: 0 }
+    );
+    sectionIds.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
     });
 
-    return () => {
-      observers.forEach((obs) => obs?.disconnect());
-    };
+    return () => observer.disconnect();
   }, []);
 
   return activeSection;

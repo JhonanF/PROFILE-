@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { constellationNodes } from "../../data/profile";
 import type { ConstellationNode } from "../../types";
-import { isTouchDevice } from "../../lib/utils";
+import { usePerformanceProfile } from "../../performance/profile";
+
+const MOBILE_NODE_IDS = new Set(["jhonan", "rust", "python", "typescript", "luau", "threejs", "react"]);
 
 const CATEGORY_COLORS: Record<string, string> = {
   core: "#a78bfa",
@@ -15,10 +17,14 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export function TechConstellation() {
+  const performance = usePerformanceProfile();
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [dimensions, setDimensions] = useState({ w: 700, h: 500 });
-  const isTouch = isTouchDevice();
+  const isTouch = performance.isTouch;
+  const displayedNodes = isTouch
+    ? constellationNodes.filter((node) => MOBILE_NODE_IDS.has(node.id))
+    : constellationNodes;
 
   useEffect(() => {
     const el = containerRef.current;
@@ -105,9 +111,9 @@ export function TechConstellation() {
             aria-hidden="true"
           >
             {/* Connection lines */}
-            {constellationNodes.map((node) =>
+            {displayedNodes.map((node) =>
               node.connections.map((targetId) => {
-                const target = constellationNodes.find((n) => n.id === targetId);
+                const target = displayedNodes.find((n) => n.id === targetId);
                 if (!target || node.id >= targetId) return null;
 
                 const a = getNodePos(node);
@@ -139,7 +145,7 @@ export function TechConstellation() {
           </svg>
 
           {/* Nodes */}
-          {constellationNodes.map((node) => {
+          {displayedNodes.map((node) => {
             const { x, y } = getNodePos(node);
             const color = CATEGORY_COLORS[node.category] ?? "#a78bfa";
             const isHovered = hoveredId === node.id;
@@ -162,6 +168,8 @@ export function TechConstellation() {
                   border: "none",
                   cursor: "pointer",
                   padding: 0,
+                  minWidth: 48,
+                  minHeight: 48,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",

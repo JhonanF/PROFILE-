@@ -166,6 +166,7 @@ export function TechnicalIdentity() {
           </span>
           <span
             className="font-display font-bold tracking-widest"
+            translate="no"
             style={{ color: "var(--accent-violet-light)" }}
           >
             JHONAN FACTOR

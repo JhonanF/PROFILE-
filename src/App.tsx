@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { BackgroundScene } from "./features/effects/BackgroundScene";
+import { useCallback, useState } from "react";
+import { BackgroundScene, MobileBackgroundFallback } from "./features/effects/BackgroundScene";
 import { CustomCursor } from "./features/effects/CustomCursor";
 import { IntroSequence } from "./features/intro/IntroSequence";
 import { Navigation } from "./components/layout/Navigation";
@@ -12,11 +12,13 @@ import { ArchitecturalVibe } from "./features/vibe/ArchitecturalVibe";
 import { Terminal } from "./features/terminal/Terminal";
 import { Contact } from "./features/contact/Contact";
 import { useActiveSection } from "./hooks/useActiveSection";
+import { usePerformanceProfile } from "./performance/profile";
 import "./styles/globals.css";
 
 export default function App() {
   const [introComplete, setIntroComplete] = useState(false);
   const activeSection = useActiveSection();
+  const performance = usePerformanceProfile();
 
   const handleIntroComplete = useCallback(() => {
     setIntroComplete(true);
@@ -25,15 +27,15 @@ export default function App() {
   return (
     <>
       {/* Fixed background layers */}
-      <BackgroundScene />
+      {performance.enableBackgroundCanvas ? <BackgroundScene /> : <MobileBackgroundFallback />}
 
       {/* Custom cursor — desktop only */}
-      <CustomCursor />
+      {performance.enableCursor && <CustomCursor />}
 
       {/* Intro boot sequence */}
       <IntroSequence onComplete={handleIntroComplete} />
 
-      {/* Main app — opacity transition after intro */}
+      {/* Main app */}
       <div
         style={{
           opacity: introComplete ? 1 : 0,
