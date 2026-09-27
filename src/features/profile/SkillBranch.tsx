@@ -35,13 +35,13 @@ export function SkillBranch({ category, isSelected, onSelect, index }: SkillBran
   const active = isSelected || hovered;
 
   return (
-    <div>
+    <div className={`skill-branch ${isSelected ? "is-open" : ""}`}>
       {/* Branch header */}
       <button
         onClick={() => onSelect(category.id)}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="w-full text-left flex items-center gap-4 py-3 px-4 rounded-lg"
+        className="skill-branch__trigger w-full text-left flex items-center gap-4 py-3 px-4 rounded-lg"
         style={{
           background: active ? colors.bg : "transparent",
           border: `1px solid ${active ? colors.border : "var(--border-subtle)"}`,
@@ -55,7 +55,7 @@ export function SkillBranch({ category, isSelected, onSelect, index }: SkillBran
       >
         {/* Tree prefix */}
         <span
-          className="font-mono text-xs shrink-0"
+          className="skill-branch__prefix font-mono text-xs shrink-0"
           style={{ color: "var(--text-muted)" }}
           aria-hidden="true"
         >
@@ -64,6 +64,7 @@ export function SkillBranch({ category, isSelected, onSelect, index }: SkillBran
 
         {/* Icon */}
         <span
+          className="skill-branch__icon"
           style={{ color: active ? colors.text : "var(--text-muted)", fontSize: "1.1rem" }}
           aria-hidden="true"
         >
@@ -72,7 +73,7 @@ export function SkillBranch({ category, isSelected, onSelect, index }: SkillBran
 
         {/* Label */}
         <span
-          className="font-mono text-sm font-medium tracking-widest"
+          className="skill-branch__label font-mono text-sm font-medium tracking-widest"
           style={{
             color: active ? colors.text : "var(--text-secondary)",
             transition: "color 0.3s ease",
@@ -84,7 +85,7 @@ export function SkillBranch({ category, isSelected, onSelect, index }: SkillBran
 
         {/* Count badge */}
         <span
-          className="ml-auto font-mono text-xs px-2 py-0.5 rounded"
+          className="skill-branch__count ml-auto font-mono text-xs px-2 py-0.5 rounded"
           style={{
             background: active ? colors.bg : "transparent",
             border: `1px solid ${active ? colors.border : "transparent"}`,
@@ -98,6 +99,7 @@ export function SkillBranch({ category, isSelected, onSelect, index }: SkillBran
 
         {/* Expand arrow */}
         <span
+          className="skill-branch__chevron"
           style={{
             color: "var(--text-muted)",
             transform: isSelected ? "rotate(180deg)" : "rotate(0deg)",
@@ -112,6 +114,7 @@ export function SkillBranch({ category, isSelected, onSelect, index }: SkillBran
 
       {/* Technology grid — revealed on select */}
       <div
+        className="skill-branch__content"
         style={{
           maxHeight: isSelected ? "400px" : "0",
           overflow: "hidden",
@@ -120,11 +123,11 @@ export function SkillBranch({ category, isSelected, onSelect, index }: SkillBran
         role="region"
         aria-label={`${category.label} technologies`}
       >
-        <div className="ml-10 mt-2 mb-2 flex flex-wrap gap-2">
+        <div className="skill-branch__tags ml-10 mt-2 mb-2 flex flex-wrap gap-2">
           {category.technologies.map((tech) => (
             <span
               key={tech.name}
-              className="font-mono text-xs px-3 py-1.5 rounded"
+              className="skill-branch__tag font-mono text-xs px-3 py-1.5 rounded"
               style={{
                 background: colors.bg,
                 border: `1px solid ${colors.border}`,

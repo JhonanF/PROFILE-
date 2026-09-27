@@ -3,12 +3,12 @@ import { skillCategories } from "../../data/skills";
 import { SkillBranch } from "./SkillBranch";
 
 const CATEGORY_SUMMARIES: Readonly<Record<string, string>> = {
-  systems: "Performance, memory and data systems built close to the metal.",
-  security: "Runtime inspection, interception and controlled execution.",
-  ai: "Validated machine-learning pipelines and structured AI systems.",
-  intel: "Collection, normalization and analysis of threat intelligence.",
-  fullstack: "Reliable products spanning interfaces, APIs and infrastructure.",
-  creative: "Immersive web experiences driven by graphics and motion.",
+  systems: "Rendimiento, memoria y sistemas de datos construidos cerca del hardware.",
+  security: "Inspección en ejecución, interceptación y ejecución controlada.",
+  ai: "Pipelines de machine learning validados y sistemas de IA estructurados.",
+  intel: "Recopilación, normalización y análisis de inteligencia de amenazas.",
+  fullstack: "Productos confiables que integran interfaces, APIs e infraestructura.",
+  creative: "Experiencias web inmersivas impulsadas por gráficos y movimiento.",
 };
 
 export function TechnicalIdentity() {
@@ -23,59 +23,45 @@ export function TechnicalIdentity() {
   return (
     <section
       id="dna"
-      className="technical-identity relative section px-6 max-w-4xl mx-auto"
+      className="technical-identity relative section px-6 max-w-5xl mx-auto"
       style={{ zIndex: 10 }}
       aria-labelledby="dna-heading"
     >
       {/* Section heading */}
-      <div className="mb-12">
+      <div className="technical-identity__header mb-12">
         <div
-          className="font-mono text-xs tracking-widest mb-3"
+          className="technical-identity__eyebrow font-mono text-xs tracking-widest mb-3"
           style={{ color: "var(--accent-violet)" }}
           aria-hidden="true"
         >
-          02 / TECHNICAL DNA
+          02 / ADN TÉCNICO
         </div>
         <h2
           id="dna-heading"
-          className="font-display font-black tracking-tight"
-          style={{
-            fontSize: "clamp(2rem, 4vw, 3rem)",
-            color: "var(--text-primary)",
-          }}
+          className="technical-identity__title blood-title font-display font-black tracking-tight"
         >
-          TECHNICAL
+          <span className="blood-ink blood-ink--light blood-ink--line">IDENTIDAD</span>
           <span
-            style={{
-              background: "linear-gradient(90deg, var(--accent-violet-light), var(--accent-blue-light))",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              marginLeft: "0.4em",
-            }}
+            className="technical-identity__accent blood-ink blood-ink--red"
           >
-            IDENTITY
+            TÉCNICA
           </span>
         </h2>
         <p
-          className="font-body mt-3"
-          style={{
-            color: "var(--text-secondary)",
-            fontSize: "clamp(0.9rem, 1.5vw, 1.05rem)",
-          }}
+          className="technical-identity__description font-body mt-3"
         >
-          Six branches of technical expertise. Select any to explore the technology stack.
+          Seis ramas de experiencia técnica. Selecciona una para explorar el stack tecnológico.
         </p>
       </div>
 
       {/* Mobile domain explorer */}
-      <div className="skills-mobile" aria-label="Technical skill domains">
+      <div className="skills-mobile" aria-label="Dominios de habilidades técnicas">
         <div className="skills-mobile__eyebrow" aria-hidden="true">
-          <span>SELECT DOMAIN</span>
-          <span>SWIPE</span>
+          <span>SELECCIONA UN DOMINIO</span>
+          <span>DESLIZA</span>
         </div>
 
-        <div className="skills-domain-track" role="tablist" aria-label="Skill domains">
+        <div className="skills-domain-track" role="tablist" aria-label="Dominios de habilidades">
           {skillCategories.map((category, index) => {
             const isActive = selectedCategory?.id === category.id;
 
@@ -109,10 +95,10 @@ export function TechnicalIdentity() {
           >
             <div className="skills-mobile__panel-header">
               <div>
-                <span className="skills-mobile__status">ACTIVE DOMAIN</span>
+                <span className="skills-mobile__status">DOMINIO ACTIVO</span>
                 <h3>{selectedCategory.label}</h3>
               </div>
-              <span className="skills-mobile__total" aria-label={`${selectedCategory.technologies.length} technologies`}>
+              <span className="skills-mobile__total" aria-label={`${selectedCategory.technologies.length} tecnologías`}>
                 {String(selectedCategory.technologies.length).padStart(2, "0")}
               </span>
             </div>
@@ -122,7 +108,7 @@ export function TechnicalIdentity() {
             </p>
 
             <div className="skills-mobile__stack-label" aria-hidden="true">
-              <span>CORE STACK</span>
+              <span>STACK PRINCIPAL</span>
               <span className="skills-mobile__swipe-hint">DESLIZA →</span>
             </div>
 
@@ -143,38 +129,30 @@ export function TechnicalIdentity() {
 
       {/* Desktop tree structure */}
       <div
-        className="skills-desktop rounded-xl p-6"
-        style={{
-          background: "var(--bg-glass)",
-          border: "1px solid var(--border-subtle)",
-          backdropFilter: "blur(12px)",
-        }}
+        className="skills-desktop dna-panel rounded-xl p-6"
         role="tree"
-        aria-label="Technical skill tree"
+        aria-label="Árbol de habilidades técnicas"
       >
         {/* Root node */}
         <div
-          className="flex items-center gap-3 mb-4 pb-4"
-          style={{ borderBottom: "1px solid var(--border-subtle)" }}
+          className="dna-panel__root flex items-center gap-3 mb-4 pb-4"
           aria-hidden="true"
         >
           <span
-            className="font-mono text-xs"
-            style={{ color: "var(--text-muted)" }}
+            className="dna-panel__root-label font-mono text-xs"
           >
             [ROOT]
           </span>
           <span
-            className="font-display font-bold tracking-widest"
+            className="dna-panel__root-name font-display font-bold tracking-widest"
             translate="no"
-            style={{ color: "var(--accent-violet-light)" }}
           >
             JHONAN FACTOR
           </span>
         </div>
 
         {/* Branches */}
-        <div className="flex flex-col gap-1" role="group" aria-label="Skill branches">
+        <div className="flex flex-col gap-1" role="group" aria-label="Ramas de habilidades">
           {skillCategories.map((category, index) => (
             <SkillBranch
               key={category.id}

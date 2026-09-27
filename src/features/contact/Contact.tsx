@@ -1,102 +1,52 @@
 import { About } from "../about/About";
 import { SocialLinks } from "./SocialLinks";
 
+const OPPORTUNITIES = [
+  "Ingeniería de Sistemas",
+  "Investigación en Seguridad",
+  "ML aplicado",
+  "Desarrollo creativo",
+  "Consultoría técnica",
+] as const;
+
 export function Contact() {
   return (
     <section
       id="contact"
-      className="relative section px-6"
-      style={{ zIndex: 10 }}
+      className="contact-section section"
       aria-labelledby="contact-heading"
     >
-      <div className="max-w-4xl mx-auto">
-        {/* Heading */}
-        <div className="mb-12 text-center">
-          <div
-            className="font-mono text-xs tracking-widest mb-3"
-            style={{ color: "var(--accent-violet)" }}
-            aria-hidden="true"
-          >
-            07 / CONTACT
-          </div>
-          <h2
-            id="contact-heading"
-            className="font-display font-black"
-            style={{
-              fontSize: "clamp(2rem, 4vw, 3rem)",
-              color: "var(--text-primary)",
-            }}
-          >
-            REACH
-            <span
-              style={{
-                background:
-                  "linear-gradient(90deg, var(--accent-violet-light), var(--accent-blue-light))",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                marginLeft: "0.4em",
-              }}
-            >
-              OUT
-            </span>
+      <div className="contact-shell">
+        <header className="contact-heading">
+          <p className="contact-eyebrow" aria-hidden="true">07 / CONTACTO</p>
+          <h2 id="contact-heading" className="blood-title">
+            <span className="blood-ink blood-ink--light blood-ink--line">CONTACTA</span>
+            <span className="blood-ink blood-ink--red">CON ÉL</span>
           </h2>
-        </div>
+          <p className="contact-intro">
+            Disponible para construir sistemas exigentes, resolver problemas complejos y colaborar con intención.
+          </p>
+        </header>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* About */}
+        <div className="contact-layout">
           <About />
 
-          {/* Links & status */}
-          <div className="flex flex-col gap-6">
-            {/* Social links */}
-            <div
-              className="rounded-xl p-6"
-              style={{
-                background: "var(--bg-glass)",
-                border: "1px solid var(--border-subtle)",
-                backdropFilter: "blur(12px)",
-              }}
-            >
-              <div
-                className="font-mono text-xs tracking-widest mb-5"
-                style={{ color: "var(--text-muted)" }}
-                aria-hidden="true"
-              >
-                CHANNELS
-              </div>
+          <div className="contact-side">
+            <div className="contact-panel contact-channels">
+              <div className="contact-panel__label" aria-hidden="true">CANALES</div>
               <SocialLinks />
             </div>
 
-            {/* Availability / open to */}
-            <div
-              className="rounded-xl p-6"
-              style={{
-                background: "var(--bg-glass)",
-                border: "1px solid rgba(34,197,94,0.15)",
-                backdropFilter: "blur(12px)",
-              }}
-            >
-              <div className="flex items-center gap-2 mb-4">
+            <div className="contact-panel contact-opportunities">
+              <div className="contact-opportunities__heading">
                 <span className="status-dot" aria-hidden="true" />
-                <span
-                  className="font-mono text-xs tracking-widest"
-                  style={{ color: "#22c55e" }}
-                >
-                  OPEN TO OPPORTUNITIES
-                </span>
+                <span>ABIERTO A OPORTUNIDADES</span>
               </div>
 
-              <ul className="flex flex-col gap-2 font-mono text-xs" style={{ color: "var(--text-secondary)" }}>
-                {[
-                  "Systems Engineering",
-                  "Security Research",
-                  "Applied ML",
-                  "Creative Development",
-                  "Technical Consulting",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-2">
-                    <span style={{ color: "var(--accent-violet)" }} aria-hidden="true">▸</span>
+              <ul>
+                {OPPORTUNITIES.map((item) => (
+                  <li key={item}>
+                    <span aria-hidden="true">—</span>
                     {item}
                   </li>
                 ))}
@@ -105,28 +55,16 @@ export function Contact() {
           </div>
         </div>
 
-        {/* Footer */}
-        <div
-          className="mt-16 pt-8 text-center font-mono text-xs"
-          style={{
-            borderTop: "1px solid var(--border-subtle)",
-            color: "var(--text-muted)",
-          }}
-          aria-label="Footer"
-        >
-          <div className="flex items-center justify-center gap-4 flex-wrap">
+        <div className="contact-footer" aria-label="Pie de página">
+          <div className="contact-footer__metadata">
             <span>JHONAN FACTOR</span>
-            <span style={{ color: "var(--border-default)" }}>│</span>
-            <span>BUILD {" "}<span style={{ color: "var(--accent-violet-light)" }}>JF.01</span></span>
-            <span style={{ color: "var(--border-default)" }}>│</span>
-            <span className="flex items-center gap-1.5">
+            <span>COMPILACIÓN <strong>JF.01</strong></span>
+            <span className="contact-footer__status">
               <span className="status-dot" aria-hidden="true" />
-              RUNTIME ACTIVE
+              SISTEMA ACTIVO
             </span>
           </div>
-          <p className="mt-3" style={{ color: "var(--text-muted)", opacity: 0.5 }}>
-            Designed & built by Jhonan Factor
-          </p>
+          <p>Diseñado y construido por Jhonan Factor</p>
         </div>
       </div>
     </section>

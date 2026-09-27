@@ -1,32 +1,19 @@
 export function About() {
   return (
-    <div
-      className="rounded-xl p-8"
-      style={{
-        background: "var(--bg-glass)",
-        border: "1px solid var(--border-subtle)",
-        backdropFilter: "blur(12px)",
-      }}
-    >
-      <div
-        className="font-mono text-xs tracking-widest mb-4"
-        style={{ color: "var(--accent-violet)" }}
-        aria-hidden="true"
-      >
-        ABOUT / BIO
-      </div>
-      <div className="flex flex-col gap-4 font-body" style={{ color: "var(--text-secondary)", lineHeight: 1.8, fontSize: "1rem" }}>
+    <article className="contact-panel contact-about">
+      <div className="contact-panel__label" aria-hidden="true">SOBRE / BIO</div>
+      <div className="contact-about__copy">
         <p>
-          I build systems across multiple layers of the stack — from memory-aware
-          backend processing and runtime analysis to applied machine learning and
-          interactive WebGL experiences.
+          Construyo sistemas en múltiples capas del stack, desde procesamiento backend
+          eficiente en memoria y análisis en ejecución hasta machine learning aplicado
+          y experiencias WebGL interactivas.
         </p>
         <p>
-          My workflow combines software architecture, AI-assisted development and
-          low-level technical experimentation to move rapidly from concept to
-          working systems.
+          Mi flujo de trabajo combina arquitectura de software, desarrollo asistido por IA
+          y experimentación técnica de bajo nivel para avanzar rápidamente del concepto
+          a sistemas funcionales.
         </p>
       </div>
-    </div>
+    </article>
   );
 }

@@ -33,7 +33,7 @@ const ICONS: Record<string, ReactElement> = {
 export function SocialLinks() {
   return (
     <nav aria-label="Social media links">
-      <div className="flex items-center gap-4 flex-wrap">
+      <div className="contact-socials">
         {socials.map((social) => (
           <a
             key={social.id}
@@ -41,33 +41,12 @@ export function SocialLinks() {
             target={social.id !== "email" ? "_blank" : undefined}
             rel={social.id !== "email" ? "noopener noreferrer" : undefined}
             aria-label={social.ariaLabel}
-            className="flex items-center justify-center rounded-lg"
-            style={{
-              width: 48,
-              height: 48,
-              background: "var(--bg-glass)",
-              border: "1px solid var(--border-subtle)",
-              color: "var(--text-muted)",
-              textDecoration: "none",
-              transition: "all 0.25s ease",
-            }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget;
-              el.style.color = "var(--accent-violet-light)";
-              el.style.borderColor = "var(--border-accent)";
-              el.style.background = "rgba(124,58,237,0.08)";
-              el.style.boxShadow = "var(--glow-violet)";
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget;
-              el.style.color = "var(--text-muted)";
-              el.style.borderColor = "var(--border-subtle)";
-              el.style.background = "var(--bg-glass)";
-              el.style.boxShadow = "none";
-            }}
+            className="contact-social-link"
             data-hover
           >
-            {ICONS[social.icon]}
+            <span className="contact-social-link__icon">{ICONS[social.icon]}</span>
+            <span>{social.label}</span>
+            <span className="contact-social-link__arrow" aria-hidden="true">↗</span>
           </a>
         ))}
       </div>

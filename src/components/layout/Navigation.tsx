@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { navItems } from "../../data/profile";
 import type { SectionId } from "../../types";
 
@@ -7,8 +7,12 @@ interface NavigationProps {
 }
 
 export function Navigation({ activeSection }: NavigationProps) {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(
+    () => typeof window !== "undefined" && window.scrollY > 60
+  );
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuTriggerRef = useRef<HTMLButtonElement>(null);
+  const menuDrawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let frame: number | null = null;
@@ -35,27 +39,60 @@ export function Navigation({ activeSection }: NavigationProps) {
     if (!menuOpen) return;
 
     const previousOverflow = document.body.style.overflow;
+    const menuTrigger = menuTriggerRef.current;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenuOpen(false);
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+      const focusable = Array.from(
+        menuDrawerRef.current?.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+        ) ?? []
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     document.body.style.overflow = "hidden";
     document.addEventListener("keydown", handleKeyDown);
+    const focusTimer = window.setTimeout(() => {
+      menuDrawerRef.current?.querySelector<HTMLElement>("button")?.focus();
+    }, 240);
     return () => {
+      window.clearTimeout(focusTimer);
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
+      menuTrigger?.focus();
     };
   }, [menuOpen]);
+
+  const getScrollBehavior = (): ScrollBehavior =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
 
   const scrollTo = (section: SectionId) => {
     setMenuOpen(false);
     const el = document.getElementById(section);
-    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    el?.scrollIntoView({ behavior: getScrollBehavior(), block: "start" });
   };
 
   return (
     <nav
       role="navigation"
-      aria-label="Main navigation"
+      aria-label="Navegación principal"
       className="site-navigation fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
       style={{
         background: scrolled
@@ -71,7 +108,7 @@ export function Navigation({ activeSection }: NavigationProps) {
       <button
         onClick={() => {
           setMenuOpen(false);
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          window.scrollTo({ top: 0, behavior: getScrollBehavior() });
         }}
         className="font-mono font-bold tracking-widest"
         style={{
@@ -81,8 +118,10 @@ export function Navigation({ activeSection }: NavigationProps) {
           cursor: "pointer",
           fontSize: "0.9rem",
           letterSpacing: "0.25em",
+          minWidth: 44,
+          minHeight: 44,
         }}
-        aria-label="Scroll to top"
+        aria-label="Volver al inicio"
       >
         JF_
       </button>
@@ -108,10 +147,13 @@ export function Navigation({ activeSection }: NavigationProps) {
                     : "var(--text-muted)",
                   transition: "color 0.2s ease",
                   padding: "4px 0",
+                  minHeight: 44,
+                  display: "inline-flex",
+                  alignItems: "center",
                   position: "relative",
                 }}
                 aria-current={isActive ? "page" : undefined}
-                aria-label={`Navigate to ${item.label} section`}
+                aria-label={`Ir a la sección ${item.label}`}
                 data-hover
               >
                 {item.label}
@@ -136,9 +178,10 @@ export function Navigation({ activeSection }: NavigationProps) {
       </ul>
 
       <button
+        ref={menuTriggerRef}
         type="button"
         className="mobile-menu-trigger md:hidden"
-        aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-label={menuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
         aria-expanded={menuOpen}
         aria-controls="mobile-navigation-drawer"
         onClick={() => setMenuOpen((open) => !open)}
@@ -153,7 +196,7 @@ export function Navigation({ activeSection }: NavigationProps) {
         aria-hidden="true"
       >
         <span className="status-dot" />
-        <span>SYSTEM ONLINE</span>
+        <span>SISTEMA EN LÍNEA</span>
       </div>
 
       <div
@@ -163,12 +206,16 @@ export function Navigation({ activeSection }: NavigationProps) {
       />
 
       <div
+        ref={menuDrawerRef}
         id="mobile-navigation-drawer"
         className={`mobile-navigation-drawer md:hidden ${menuOpen ? "is-open" : ""}`}
         aria-hidden={!menuOpen}
+        aria-label="Menú de navegación"
+        aria-modal={menuOpen ? "true" : undefined}
+        role="dialog"
       >
         <div className="mobile-navigation-drawer__header">
-          <span>NAVIGATION</span>
+          <span>NAVEGACIÓN</span>
           <span>JF.OS / 01</span>
         </div>
         <ul role="list">

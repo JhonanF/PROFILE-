@@ -104,6 +104,71 @@ export function HimikoMotionBackground({
     };
   }, [performance.enableParallax]);
 
+  useEffect(() => {
+    const scene = sceneRef.current;
+    const hero = document.querySelector("#identity");
+    const dna = document.querySelector("#dna");
+    const constellation = document.querySelector("#constellation");
+    const projects = document.querySelector("#projects");
+    const method = document.querySelector("#vibe");
+    const terminal = document.querySelector("#terminal");
+    const contact = document.querySelector("#contact");
+    if (!scene || !hero || !dna || !constellation || !projects || !method || !terminal || !contact) return;
+
+    let heroVisible = true;
+    let dnaVisible = false;
+    let constellationVisible = false;
+    let projectsVisible = false;
+    let methodVisible = false;
+    let terminalVisible = false;
+    let contactVisible = false;
+
+    const updateVariant = () => {
+      scene.dataset.section = contactVisible
+        ? "contact"
+        : terminalVisible
+          ? "terminal"
+          : methodVisible
+            ? "method"
+            : projectsVisible
+              ? "projects"
+              : constellationVisible
+                ? "constellation"
+                : dnaVisible
+                  ? "dna"
+                  : heroVisible
+                    ? "hero"
+                    : "ambient";
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.target === hero) heroVisible = entry.isIntersecting;
+          if (entry.target === dna) dnaVisible = entry.isIntersecting;
+          if (entry.target === constellation) constellationVisible = entry.isIntersecting;
+          if (entry.target === projects) projectsVisible = entry.isIntersecting;
+          if (entry.target === method) methodVisible = entry.isIntersecting;
+          if (entry.target === terminal) terminalVisible = entry.isIntersecting;
+          if (entry.target === contact) contactVisible = entry.isIntersecting;
+        });
+        updateVariant();
+      },
+      { rootMargin: "-18% 0px -18% 0px", threshold: 0 },
+    );
+
+    observer.observe(hero);
+    observer.observe(dna);
+    observer.observe(constellation);
+    observer.observe(projects);
+    observer.observe(method);
+    observer.observe(terminal);
+    observer.observe(contact);
+    updateVariant();
+
+    return () => observer.disconnect();
+  }, []);
+
   const style: SceneStyle = {
     "--himiko-background-image": `url("${backgroundSrc}")`,
     "--himiko-mobile-background-image": `url("${mobileBackgroundSrc}")`,

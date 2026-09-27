@@ -12,7 +12,7 @@ export function useTerminal() {
     {
       id: "welcome",
       type: "output",
-      content: 'Type "help" to see available commands.',
+      content: 'Escribe "help" para ver los comandos disponibles.',
     },
   ]);
   const [input, setInput] = useState("");
@@ -49,7 +49,7 @@ export function useTerminal() {
         {
           id: `e-${Date.now()}`,
           type: "error",
-          content: `Command not found: ${cmd}. Type "help" for available commands.`,
+          content: `Comando no encontrado: ${cmd}. Escribe "help" para ver los comandos disponibles.`,
         },
       ]);
     } else {

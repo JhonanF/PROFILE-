@@ -1,20 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { usePerformanceProfile } from "../../performance/profile";
 
 const NORMAL_LINES = [
-  { text: "INITIALIZING PROFILE...", delay: 0 },
-  { text: "LOADING SYSTEMS...", delay: 400 },
-  { text: "MOUNTING /dev/sda1...", delay: 800 },
+  { text: "INICIALIZANDO PERFIL...", delay: 0 },
+  { text: "CARGANDO SISTEMAS...", delay: 400 },
+  { text: "MONTANDO /dev/sda1...", delay: 800 },
 ];
 
 const GLITCH_LINES = [
-  { text: "SY5T3M C0RRUPT10N D3T3CT3D", delay: 1200 },
-  { text: "UNAUTHORIZED ACCESS", delay: 1300 },
-  { text: "BREACH_BREACH_BREACH", delay: 1400 },
+  { text: "C0RRUPC10N D3L S1ST3MA D3T3CTADA", delay: 1200 },
+  { text: "ACCESO NO AUTORIZADO", delay: 1300 },
+  { text: "BRECHA_BRECHA_BRECHA", delay: 1400 },
 ];
 
-const STORAGE_KEY = "jf-intro-seen-v2";
 const ORIGINAL_TITLE = "[ JHONAN FACTOR ]";
 const SCRAMBLE_CHARS = "!<>-_\\/[]{}—=+*^?#_";
 
@@ -214,8 +211,6 @@ interface IntroSequenceProps {
 }
 
 export function IntroSequence({ onComplete }: IntroSequenceProps) {
-  const [hasSeen, setHasSeen] = useLocalStorage<boolean>(STORAGE_KEY, false);
-  const performance = usePerformanceProfile();
   const [visibleLines, setVisibleLines] = useState<number[]>([]);
   const [phase, setPhase] = useState<"boot" | "corrupted" | "jumpscare" | "done">("boot");
   const timeoutRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -256,7 +251,6 @@ export function IntroSequence({ onComplete }: IntroSequenceProps) {
 
     const timeout = setTimeout(() => {
       setPhase("done");
-      setHasSeen(true);
       onComplete();
     }, 100);
     timeoutRefs.current.push(timeout);
@@ -265,7 +259,7 @@ export function IntroSequence({ onComplete }: IntroSequenceProps) {
   useEffect(() => {
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    if (hasSeen || performance.tier !== "high" || reducedMotionQuery.matches) {
+    if (reducedMotionQuery.matches) {
       setPhase("done");
       onComplete();
       return;
@@ -370,7 +364,7 @@ export function IntroSequence({ onComplete }: IntroSequenceProps) {
         }`}
         style={{ zIndex: 10000, cursor: "default" }}
         role="status"
-        aria-label="Loading Jhonan Factor profile"
+        aria-label="Cargando el perfil de Jhonan Factor"
         aria-live="polite"
         onClick={finish}
       >
@@ -428,7 +422,7 @@ export function IntroSequence({ onComplete }: IntroSequenceProps) {
             }`}
             style={{ color: "var(--text-muted)", cursor: "pointer" }}
           >
-            PRESS ANYWHERE TO SKIP
+            PULSA PARA OMITIR
           </button>
         </div>
 

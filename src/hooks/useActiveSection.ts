@@ -7,22 +7,50 @@ export function useActiveSection(): SectionId {
 
   useEffect(() => {
     const sectionIds = navItems.map((n) => n.section);
+    let frame: number | null = null;
+
+    const updateActiveSection = () => {
+      frame = null;
+
+      if (
+        window.scrollY + window.innerHeight >=
+        document.documentElement.scrollHeight - 2
+      ) {
+        setActiveSection(sectionIds.at(-1) ?? "contact");
+        return;
+      }
+
+      const focusLine = window.innerHeight * 0.45;
+      let nextSection = sectionIds[0] ?? "identity";
+
+      for (const id of sectionIds) {
+        const element = document.getElementById(id);
+        if (!element || element.getBoundingClientRect().top > focusLine) break;
+        nextSection = id;
+      }
+
+      setActiveSection(nextSection);
+    };
+
+    const queueUpdate = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(updateActiveSection);
+    };
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries.find((entry) => entry.isIntersecting);
-        if (visibleEntry && sectionIds.includes(visibleEntry.target.id as SectionId)) {
-          setActiveSection(visibleEntry.target.id as SectionId);
-        }
-      },
+      queueUpdate,
       { rootMargin: "-40% 0px -40% 0px", threshold: 0 }
     );
     sectionIds.forEach((id) => {
       const element = document.getElementById(id);
       if (element) observer.observe(element);
     });
+    queueUpdate();
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
   }, []);
 
   return activeSection;

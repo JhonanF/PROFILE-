@@ -2,39 +2,37 @@ import type { ProfileMeta, WorkflowStep, NavItem, ConstellationNode } from "../t
 
 export const profile: ProfileMeta = {
   name: "JHONAN FACTOR",
-  title: "Software, Systems, Security & Applied Machine Learning Engineer",
-  tagline: "Observe. Analyze. Exploit. Improve.",
+  title: "Ingeniero de Software, Seguridad y Sistemas Inteligentes",
+  tagline: "Diseño sistemas rápidos, seguros e inteligentes.",
   roles: [
-    "Software Engineering",
-    "High-Performance Backend",
-    "Runtime Reverse Engineering",
-    "Cyber Threat Intelligence",
-    "AI Systems",
-    "Creative Full-Stack",
+    "Ingeniería de Software",
+    "Ciberseguridad",
+    "IA Aplicada",
+    "Ingeniería de Sistemas",
   ],
-  location: "LIMA / PERU",
+  location: "LIMA / PERÚ",
   buildId: "JF.01",
   status: "NOMINAL",
 } as const;
 
 export const workflowSteps: readonly WorkflowStep[] = [
-  { step: "DISCOVERY", description: "Requirements, constraints, and success criteria" },
-  { step: "SYSTEM DESIGN", description: "Boundaries, contracts, data and control flow" },
-  { step: "RISK ANALYSIS", description: "Failure modes, attack surface, and trade-offs" },
-  { step: "IMPLEMENTATION", description: "Typed, testable, production-grade code" },
-  { step: "VERIFICATION", description: "Tests, review, static and dynamic analysis" },
-  { step: "PROFILING", description: "Latency, memory, throughput, and bottlenecks" },
-  { step: "OPERATIONS", description: "Observability, deployment, and feedback loops" },
+  { step: "DISCOVERY", description: "Requisitos, restricciones y criterios de éxito" },
+  { step: "SYSTEM DESIGN", description: "Límites, contratos y flujos de datos y control" },
+  { step: "RISK ANALYSIS", description: "Modos de fallo, superficie de ataque y compensaciones" },
+  { step: "IMPLEMENTATION", description: "Código tipado, comprobable y listo para producción" },
+  { step: "VERIFICATION", description: "Pruebas, revisión y análisis estático y dinámico" },
+  { step: "PROFILING", description: "Latencia, memoria, rendimiento y cuellos de botella" },
+  { step: "OPERATIONS", description: "Observabilidad, despliegue y ciclos de retroalimentación" },
 ] as const;
 
 export const navItems: readonly NavItem[] = [
-  { label: "PROFILE", section: "identity", index: 1 },
-  { label: "DNA", section: "dna", index: 2 },
-  { label: "SYSTEMS", section: "constellation", index: 3 },
-  { label: "PROJECTS", section: "projects", index: 4 },
-  { label: "METHOD", section: "vibe", index: 5 },
+  { label: "PERFIL", section: "identity", index: 1 },
+  { label: "ADN", section: "dna", index: 2 },
+  { label: "SISTEMAS", section: "constellation", index: 3 },
+  { label: "PROYECTOS", section: "projects", index: 4 },
+  { label: "MÉTODO", section: "vibe", index: 5 },
   { label: "TERMINAL", section: "terminal", index: 6 },
-  { label: "CONTACT", section: "contact", index: 7 },
+  { label: "CONTACTO", section: "contact", index: 7 },
 ] as const;
 
 export const constellationNodes: readonly ConstellationNode[] = [
@@ -44,7 +42,7 @@ export const constellationNodes: readonly ConstellationNode[] = [
     x: 50,
     y: 50,
     category: "core",
-    description: "Central node — Systems, Security & AI Engineer",
+    description: "Nodo central — Ingeniería de Sistemas, Seguridad e IA",
     connections: ["rust", "python", "typescript", "luau", "sqlite", "threejs", "catboost", "react"],
   },
   {
@@ -53,7 +51,7 @@ export const constellationNodes: readonly ConstellationNode[] = [
     x: 25,
     y: 25,
     category: "systems",
-    description: "Memory-safe systems programming for high-performance backends",
+    description: "Programación de sistemas con memoria segura para backends de alto rendimiento",
     connections: ["jhonan", "sqlite", "python"],
   },
   {
@@ -62,7 +60,7 @@ export const constellationNodes: readonly ConstellationNode[] = [
     x: 75,
     y: 20,
     category: "ai",
-    description: "AI, automation, and rapid prototyping",
+    description: "IA, automatización y prototipado rápido",
     connections: ["jhonan", "catboost", "rust"],
   },
   {
@@ -71,7 +69,7 @@ export const constellationNodes: readonly ConstellationNode[] = [
     x: 80,
     y: 70,
     category: "fullstack",
-    description: "Typed JavaScript for scalable front and backend",
+    description: "JavaScript tipado para frontend y backend escalables",
     connections: ["jhonan", "react", "threejs"],
   },
   {
@@ -80,7 +78,7 @@ export const constellationNodes: readonly ConstellationNode[] = [
     x: 20,
     y: 75,
     category: "security",
-    description: "Runtime analysis and reverse engineering",
+    description: "Análisis en tiempo de ejecución e ingeniería inversa",
     connections: ["jhonan"],
   },
   {
@@ -89,7 +87,7 @@ export const constellationNodes: readonly ConstellationNode[] = [
     x: 30,
     y: 55,
     category: "data",
-    description: "Embedded data engine — FTS5, WAL, MMAP",
+    description: "Motor de datos integrado — FTS5, WAL y MMAP",
     connections: ["jhonan", "rust"],
   },
   {
@@ -98,7 +96,7 @@ export const constellationNodes: readonly ConstellationNode[] = [
     x: 70,
     y: 45,
     category: "creative",
-    description: "WebGL-powered 3D creative development",
+    description: "Desarrollo creativo 3D impulsado por WebGL",
     connections: ["jhonan", "typescript"],
   },
   {
@@ -107,7 +105,7 @@ export const constellationNodes: readonly ConstellationNode[] = [
     x: 55,
     y: 20,
     category: "ai",
-    description: "Gradient boosting for applied ML systems",
+    description: "Gradient boosting para sistemas de ML aplicado",
     connections: ["jhonan", "python"],
   },
   {
@@ -116,7 +114,7 @@ export const constellationNodes: readonly ConstellationNode[] = [
     x: 85,
     y: 50,
     category: "fullstack",
-    description: "Component-based UI architecture",
+    description: "Arquitectura de interfaces basada en componentes",
     connections: ["jhonan", "typescript"],
   },
   {
@@ -125,7 +123,7 @@ export const constellationNodes: readonly ConstellationNode[] = [
     x: 50,
     y: 80,
     category: "infra",
-    description: "Containerized deployment and orchestration",
+    description: "Despliegue y orquestación en contenedores",
     connections: ["jhonan"],
   },
   {
@@ -134,7 +132,7 @@ export const constellationNodes: readonly ConstellationNode[] = [
     x: 65,
     y: 65,
     category: "creative",
-    description: "GPU-accelerated graphics in the browser",
+    description: "Gráficos acelerados por GPU en el navegador",
     connections: ["jhonan", "threejs"],
   },
 ] as const;

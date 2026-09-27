@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { profile } from "../../data/profile";
 
 const STATUS_ITEMS = [
-  { label: "SYSTEM_STATUS", value: "ONLINE", color: "#22c55e" },
-  { label: "RUNTIME", value: "ACTIVE", color: "var(--accent-violet-light)" },
-  { label: "LOCATION", value: profile.location, color: "var(--text-secondary)" },
-  { label: "BUILD", value: profile.buildId, color: "var(--accent-blue-light)" },
-  { label: "STACK_STATUS", value: profile.status, color: "#22c55e" },
+  { label: "ESTADO_SISTEMA", value: "EN_LÍNEA", color: "#22c55e" },
+  { label: "RUNTIME", value: "ACTIVO", color: "var(--accent-violet-light)" },
+  { label: "UBICACIÓN", value: profile.location, color: "var(--text-secondary)" },
+  { label: "COMPILACIÓN", value: profile.buildId, color: "var(--accent-blue-light)" },
+  { label: "ESTADO_STACK", value: profile.status, color: "#22c55e" },
 ];
 
 export function StatusIndicators() {
@@ -23,7 +23,7 @@ export function StatusIndicators() {
     <div
       className="absolute right-0 top-0 flex flex-col gap-1 font-mono text-xs"
       style={{ right: "-180px", top: "50%", transform: "translateY(-50%)" }}
-      aria-label="System status indicators"
+      aria-label="Indicadores de estado del sistema"
     >
       {STATUS_ITEMS.map((item, i) => (
         <div

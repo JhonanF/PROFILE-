@@ -5,62 +5,28 @@ export function ProjectGrid() {
   return (
     <section
       id="projects"
-      className="relative section px-6"
-      style={{ zIndex: 10 }}
+      className="projects-section section"
       aria-labelledby="projects-heading"
     >
-      <div className="max-w-6xl mx-auto">
-        {/* Heading */}
-        <div className="mb-12 text-center">
-          <div
-            className="font-mono text-xs tracking-widest mb-3"
-            style={{ color: "var(--accent-violet)" }}
-            aria-hidden="true"
-          >
-            04 / PROJECTS
-          </div>
-          <h2
-            id="projects-heading"
-            className="font-display font-black"
-            style={{
-              fontSize: "clamp(2rem, 4vw, 3rem)",
-              color: "var(--text-primary)",
-            }}
-          >
-            SELECTED
-            <span
-              style={{
-                background:
-                  "linear-gradient(90deg, var(--accent-violet-light), var(--accent-blue-light))",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                marginLeft: "0.4em",
-              }}
-            >
-              SYSTEMS
-            </span>
-          </h2>
-          <p
-            className="font-body mt-3 max-w-xl mx-auto"
-            style={{ color: "var(--text-secondary)", fontSize: "0.95rem" }}
-          >
-            A selection of high-impact systems spanning performance engineering, 
-            security research, applied ML, and creative development.
+      <div className="projects-shell">
+        <header className="projects-heading">
+          <p className="projects-eyebrow" aria-hidden="true">
+            04 / PROYECTOS
           </p>
-        </div>
+          <h2 id="projects-heading" className="blood-title blood-ink blood-ink--light">SISTEMAS SELECCIONADOS</h2>
+          <p className="projects-intro">
+            Una selección de sistemas de alto impacto que abarca ingeniería de rendimiento,
+            investigación en seguridad, ML aplicado y desarrollo creativo.
+          </p>
+        </header>
 
-        {/* Project grid */}
         <div
-          className="grid gap-6"
-          style={{
-            gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 340px), 1fr))",
-          }}
+          className="projects-grid"
           role="list"
-          aria-label="Project list"
+          aria-label="Lista de proyectos"
         >
           {projects.map((project) => (
-            <div key={project.id} role="listitem">
+            <div className="projects-grid__item" key={project.id} role="listitem">
               <ProjectCard project={project} />
             </div>
           ))}
